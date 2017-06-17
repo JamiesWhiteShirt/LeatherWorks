@@ -34,11 +34,28 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
-//TODO Rework this. It is using a static variable for the inventory. It will not work.
 public class ItemPack extends Item {
 	
 	private static final String TileUtil = null;
 	static ItemStack[] Packinventory;
+
+	private static EnumDyeColor[] DYE_COLORS = new EnumDyeColor[] {
+		null,
+		EnumDyeColor.RED,
+		EnumDyeColor.ORANGE,
+		EnumDyeColor.YELLOW,
+		EnumDyeColor.LIME,
+		EnumDyeColor.GREEN,
+		EnumDyeColor.CYAN,
+		EnumDyeColor.LIGHT_BLUE,
+		EnumDyeColor.BLUE,
+		EnumDyeColor.MAGENTA,
+		EnumDyeColor.PURPLE,
+		EnumDyeColor.PINK,
+		EnumDyeColor.SILVER,
+		EnumDyeColor.GRAY,
+		EnumDyeColor.BLACK
+	};
 
 	public ItemPack() {
 		this.setHasSubtypes(true);
@@ -56,7 +73,6 @@ public class ItemPack extends Item {
 	{
 		list.add("WARNING: Filling more than one pack in an inventory is not always item safe.");
 		list.add("Do so at your own risk");
-		
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -69,40 +85,15 @@ public class ItemPack extends Item {
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
 		int metadata = stack.getMetadata();
-		EnumDyeColor color = null;
-		switch(metadata){
-		case 0:
-			return super.getUnlocalizedName() + ".undyed";
-		case 1:
-			return super.getUnlocalizedName() + "."+EnumDyeColor.RED.getName().toLowerCase();
-		case 2:
-			return super.getUnlocalizedName() + "."+EnumDyeColor.ORANGE.getName().toLowerCase();
-		case 3:
-			return super.getUnlocalizedName() + "."+EnumDyeColor.YELLOW.getName().toLowerCase();
-		case 4:
-			return super.getUnlocalizedName() + "."+EnumDyeColor.LIME.getName().toLowerCase();
-		case 5:
-			return super.getUnlocalizedName() + "."+EnumDyeColor.GREEN.getName().toLowerCase();
-		case 6:
-			return super.getUnlocalizedName() + "."+EnumDyeColor.CYAN.getName().toLowerCase();
-		case 7:
-			return super.getUnlocalizedName() + "."+EnumDyeColor.LIGHT_BLUE.getName().toLowerCase();
-		case 8:
-			return super.getUnlocalizedName() + "."+EnumDyeColor.BLUE.getName().toLowerCase();
-		case 9:
-			return super.getUnlocalizedName() + "."+EnumDyeColor.MAGENTA.getName().toLowerCase();
-		case 10:	
-			return super.getUnlocalizedName() + "."+EnumDyeColor.PURPLE.getName().toLowerCase();
-		case 11:
-			return super.getUnlocalizedName() + "."+EnumDyeColor.PINK.getName().toLowerCase();
-		case 12:
-			return super.getUnlocalizedName() + "."+EnumDyeColor.SILVER.getName().toLowerCase();
-		case 13:
-			return super.getUnlocalizedName() + "."+EnumDyeColor.GRAY.getName().toLowerCase();
-		case 14:
-			return super.getUnlocalizedName() + "."+EnumDyeColor.BLACK.getName().toLowerCase();
+		if (metadata >= 0 && metadata < DYE_COLORS.length) {
+			EnumDyeColor dyeColor = DYE_COLORS[metadata];
+			if (dyeColor != null) {
+				return super.getUnlocalizedName(stack) + "." + dyeColor.getUnlocalizedName();
+			} else {
+				return super.getUnlocalizedName(stack) + ".undyed";
+			}
 		}
-		return null;
+		return super.getUnlocalizedName(stack);
 	}
 
 	@Override
